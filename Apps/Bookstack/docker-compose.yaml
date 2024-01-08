@@ -1,0 +1,77 @@
+name: bookstack
+services:
+  bookstack:
+    cpu_shares: 90
+    command: []
+    container_name: bookstack
+    depends_on:
+      bookstack_db:
+        condition: service_started
+        required: true
+    deploy:
+      resources:
+        limits:
+          memory: 7789M
+    environment:
+      - APP_URL=tbd
+      - DB_DATABASE=bookstackapp
+      - DB_HOST=bookstackdb
+      - DB_PASS=tbd
+      - DB_PORT=3306
+      - DB_USER=bookstack
+      - PGID=1000
+      - PUID=1000
+    image: lscr.io/linuxserver/bookstack
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/bookstack/config
+        target: /config
+    ports: []
+    devices: []
+    cap_add: []
+    networks:
+      - casaos
+    privileged: false
+  bookstack_db:
+    cpu_shares: 90
+    command: []
+    container_name: bookstackdb
+    deploy:
+      resources:
+        limits:
+          memory: 7789M
+    environment:
+      - MYSQL_DATABASE=bookstackapp
+      - MYSQL_PASSWORD=tbd
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=tbd
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/Rome
+    image: lscr.io/linuxserver/mariadb
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/bookstack_db/config
+        target: /config
+    ports: []
+    devices: []
+    cap_add: []
+    networks:
+      - casaos
+    privileged: false
+networks:
+  casaos:
+    name: casaos
+x-casaos:
+  author: Scaldabagno
+  category: self
+  hostname: tbd
+  icon: https://camo.githubusercontent.com/bc396d418b9da24e78f541bf221d8cc64b47c033/68747470733a2f2f73332d75732d776573742d322e616d617a6f6e6177732e636f6d2f6c696e75787365727665722d646f63732f696d616765732f626f6f6b737461636b2d6c6f676f353030783530302e706e67
+  index: /
+  port_map: "443"
+  scheme: https
+  store_app_id: bookstack_scaldabagno
+  title:
+    custom: Bookstack
